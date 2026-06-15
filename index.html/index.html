@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vicky Cars - Premium Vehicle Dealership</title>
+    <link rel="stylesheet" href="syle.css">
+</head>
+<body>
+    <!-- Header with Logo and Navigation -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="123.jpg" alt="Vicky Cars Logo" class="logo">
+                <h1>Vicky Cars</h1>
+            </div>
+            <nav class="nav">
+                <a href="#home" class="nav-link">HOME</a>
+                <a href="#vehicles" class="nav-link">VEHICLES</a>
+                <a href="#about" class="nav-link">ABOUT US</a>
+                <a href="#contact" class="nav-link">CONTACT US</a>
+            </nav>
+        </div>
+    </header>
+<section id="about" class="about-section">
+        <div class="container">
+            <h2>About Vicky Cars</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Vicky Cars is a leading vehicle dealership dedicated to providing premium quality cars and exceptional customer service.</p>
+                    <p>With over 20 years of experience, we pride ourselves on offering the best selection of vehicles at competitive prices.</p>
+                    <ul class="features-list">
+                        <li>✓ Certified Pre-Owned Vehicles</li>
+                        <li>✓ Flexible Financing Options</li>
+                        <li>✓ Expert Service Team</li>
+                        <li>✓ 5-Year Warranty Available</li>
+                        <li>✓ Trade-In Accepted</li>
+                    </ul>
+                </div>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h2>Welcome to Vicky Cars</h2>
+            <p>Your Trusted Partner for Premium Vehicles</p>
+            <button class="cta-button" onclick="document.getElementById('vehicles').scrollIntoView({behavior: 'smooth'})">Explore Our Fleet</button>
+        </div>
+    </section>
+
+    <!-- Vehicle Filter Section -->
+    <section id="vehicles" class="vehicles-section">
+        <div class="container">
+            <h2>Our Vehicles</h2>
+            <div class="filter-controls">
+                <input type="text" id="searchInput" class="search-box" placeholder="Search by car name..." onkeyup="filterVehicles()">
+                <select id="priceFilter" class="filter-select" onchange="filterVehicles()">
+                    <option value="">All Prices</option>
+                    <option value="budget">Budget (&lt; $15,000)</option>
+                    <option value="mid">Mid-Range ($15,000 - $30,000)</option>
+                    <option value="premium">Premium ($30,000+)</option>
+                </select>
+            </div>
+
+            <div class="vehicles-grid" id="vehiclesGrid">
+                <!-- Vehicle cards will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    
+                <img src="1234.jpg" alt="Vicky Cars Showroom" class="about-image">
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2>Get In Touch</h2>
+            <div class="contact-container">
+                <form class="contact-form" onsubmit="handleFormSubmit(event)">
+                    <input type="text" placeholder="Your Name" class="form-input" required>
+                    <input type="email" placeholder="Your Email" class="form-input" required>
+                    <input type="tel" placeholder="Your Phone" class="form-input" required>
+                    <textarea placeholder="Your Message" class="form-textarea" rows="5" required></textarea>
+                    <button type="submit" class="submit-button">Send Message</button>
+                </form>
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <p><strong>Phone:</strong> (555) 123-4567</p>
+                    <p><strong>Email:</strong> info@vickycars.com</p>
+                    <p><strong>Address:</strong> 123 Auto Drive, Car City, CC 12345</p>
+                    <p><strong>Hours:</strong> Mon-Fri: 9AM-6PM, Sat: 10AM-4PM, Sun: Closed</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 Vicky Cars. All rights reserved. | Your Premium Vehicle Solution</p>
+    </footer>
+
+    <!-- Vehicle Modal for Details -->
+    <div id="vehicleModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // Sample vehicle data
+        const vehicles = [
+            { id: 1, name: "Toyota Camry 2023", price: 24999, category: "mid", year: 2023, mileage: "2,500 km", fuel: "Hybrid" },
+            { id: 2, name: "Honda Civic 2022", price: 19999, category: "mid", year: 2022, mileage: "5,000 km", fuel: "Petrol" },
+            { id: 3, name: "Tesla Model 3 2024", price: 45000, category: "premium", year: 2024, mileage: "1,000 km", fuel: "Electric" },
+            { id: 4, name: "Ford Focus 2021", price: 14999, category: "budget", year: 2021, mileage: "15,000 km", fuel: "Petrol" },
+            { id: 5, name: "BMW X5 2023", price: 55000, category: "premium", year: 2023, mileage: "8,000 km", fuel: "Diesel" },
+            { id: 6, name: "Mazda CX-5 2022", price: 22999, category: "mid", year: 2022, mileage: "12,000 km", fuel: "Petrol" },
+            { id: 7, name: "Hyundai Elantra 2021", price: 12999, category: "budget", year: 2021, mileage: "20,000 km", fuel: "Petrol" },
+            { id: 8, name: "Mercedes-Benz C-Class 2023", price: 48000, category: "premium", year: 2023, mileage: "3,000 km", fuel: "Petrol" }
+        ];
+
+        // Display vehicles on page load
+        function displayVehicles(vehiclesToShow) {
+            const grid = document.getElementById('vehiclesGrid');
+            grid.innerHTML = '';
+            
+            vehiclesToShow.forEach(vehicle => {
+                const card = document.createElement('div');
+                card.className = 'vehicle-card';
+                card.innerHTML = `
+                    <div class="vehicle-image">🚗</div>
+                    <h3>${vehicle.name}</h3>
+                    <p class="price">$${vehicle.price.toLocaleString()}</p>
+                    <p class="details">${vehicle.year} | ${vehicle.mileage} | ${vehicle.fuel}</p>
+                    <button class="view-btn" onclick="openModal(${vehicle.id})">View Details</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter vehicles
+        function filterVehicles() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const priceFilter = document.getElementById('priceFilter').value;
+            
+            let filtered = vehicles.filter(v => {
+                const matchesSearch = v.name.toLowerCase().includes(searchTerm);
+                const matchesPrice = !priceFilter || v.category === priceFilter;
+                return matchesSearch && matchesPrice;
+            });
+            
+            displayVehicles(filtered);
+        }
+
+        // Open vehicle details modal
+        function openModal(vehicleId) {
+            const vehicle = vehicles.find(v => v.id === vehicleId);
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <h2>${vehicle.name}</h2>
+                <div class="modal-vehicle-icon">🚗</div>
+                <p><strong>Price:</strong> $${vehicle.price.toLocaleString()}</p>
+                <p><strong>Year:</strong> ${vehicle.year}</p>
+                <p><strong>Mileage:</strong> ${vehicle.mileage}</p>
+                <p><strong>Fuel Type:</strong> ${vehicle.fuel}</p>
+                <p style="margin-top: 20px; color: #666;">Contact us for a test drive or more information!</p>
+                <button class="close-modal-btn" onclick="closeModal()">Close</button>
+            `;
+            document.getElementById('vehicleModal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('vehicleModal').style.display = 'none';
+        }
+
+        // Handle form submission
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const name = form.elements[0].value;
+            alert(`Thank you, ${name}! We'll contact you soon.`);
+            form.reset();
+        }
+
+        // Initialize page
+        window.addEventListener('DOMContentLoaded', () => {
+            displayVehicles(vehicles);
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
